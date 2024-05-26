@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Login</h1>
+      <form method="POST">
+        <div>
+          <label for="username">Username</label><br>
+          <input type="text" name="username" id="username"><br>
+        </div>
+        <div>
+          <label for="password">Password</label><br>
+          <input type="password" name="password" id="password"><br>
+        </div>
+        <div>
+          <button type="submit">Login</button>
+        </div>
+      </form>
+      {% for message in get_flashed_messages() %}
+        <div>{{ message }}</div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
