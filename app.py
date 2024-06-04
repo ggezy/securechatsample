@@ -5,7 +5,9 @@ import encryption
 import base64
 
 app = Flask(__name__)
-
+"""
+Process Flow: Login -> Send Message (Send into messages pool contains (User, Encrypted Message, HMAC) -> Receiver Message via pooling (Decrypt the inputted Message)
+"""
 # Secret key for encryption and HMAC (16 bytes for AES-128)
 SECRET_KEY = get_random_bytes(32)
 #login_manager = LoginManager()
