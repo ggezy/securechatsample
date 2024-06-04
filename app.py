@@ -14,6 +14,7 @@ SECRET_KEY = get_random_bytes(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 messages = []
+
 users = {
     "admin": "admin",
     "minda": "minda1",
@@ -32,6 +33,8 @@ def index():
 #        if user.id == int(user_id):
 #            return user
 #    return None
+
+#Hash matching
 
 
 @app.route('/login', methods=['GET', 'POST'])

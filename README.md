@@ -1,6 +1,10 @@
 # securechatsample
 A secure Chat Sample.
 
+## Prerequisite
+1. Python
+2. Pip
+
 ## How to run?
 Run this command first, so your env kept clean
 ``python -m virtualenv venv``
