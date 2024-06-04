@@ -52,6 +52,10 @@ def login():
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
+    """
+    Send message, pool into global messages
+    :return:
+    """
     user = request.form.get('user')
     message = request.form.get('message')
 
@@ -68,6 +72,10 @@ def send_message():
 
 @app.route('/receive_messages', methods=['GET'])
 def receive_messages():
+    """
+    retrieve message from global messages, re-iterate over and over (pooling)
+    :return:
+    """
     decrypted_messages = []
     for msg in messages:
         if encryption.EncryptionHelper.verify_hmac(ciphertext=base64.b64decode(msg['message']), secretkey=SECRET_KEY, received_hmac=msg['hmac_signature']):
