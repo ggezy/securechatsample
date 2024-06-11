@@ -5,7 +5,7 @@ from user import User
 import encryption
 import base64
 import requests
-
+import handler
 app = Flask(__name__)
 
 # Secret key for encryption and HMAC (16 bytes for AES-128)
@@ -70,19 +70,12 @@ def send_message():
     """
     user = request.form.get('user')
     message = request.form.get('message')
-
-    encrypted_message = encryption.EncryptionHelper.aes_encrypt(message.encode())
-
-    hmac_signature = encryption.EncryptionHelper.generate_hmac(encrypted_message)
-    test_message = {'user': user,
-                     'message': base64.b64encode(encrypted_message).decode(),
-                     'hmac_signature': hmac_signature}
-    messages.append({'user': user,
-                     'message': base64.b64encode(encrypted_message).decode(),
-                     'hmac_signature': hmac_signature})
-    response = requests.post("http://127.0.0.1:8000/send_message", json=test_message)
-    print(response.content)
-    return render_template('chat.html')
+    enc_message = handler.ChatHandler.process_message(user=user, message=message)
+    response = requests.post("http://127.0.0.1:8000/send_message", json=enc_message)
+    if response['status'] == 200:
+        return render_template('chat.html')
+    else:
+        return render_template('chat.html')
 
 
 @app.route('/receive_messages', methods=['GET'])
@@ -92,7 +85,12 @@ def receive_messages():
     :return:
     """
     decrypted_messages = []
-    for msg in messages:
+    response = requests.get("http://127.0.0.1:8000/get_messages").json()
+    handler.ChatHandler.receive_message(response['data'])
+    if len(response.get('data')) == 0:
+        return jsonify(decrypted_messages)
+
+    for msg in response.get('data'):
         if encryption.EncryptionHelper.verify_hmac(ciphertext=base64.b64decode(msg['message']), received_hmac=msg['hmac_signature']):
             decrypted_message = encryption.EncryptionHelper.aes_decrypt(base64.b64decode(msg['message']))
             decrypted_messages.append({'user': msg['user'], 'message': decrypted_message.decode()})

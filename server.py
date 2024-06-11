@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import encryption
 import base64
 import logg
+import datetime as dt
+from scheduler import Scheduler
 
 log = logg.setup_logger(name="Secure-Server-Leviathan", level=logging.DEBUG)
 app = FastAPI()
@@ -30,19 +32,23 @@ message_pool: List[Message] = []
 
 @app.post("/send_message")
 async def send_message(message: Message):
-    if encryption.EncryptionHelper.verify_hmac(ciphertext=base64.b64decode(message.message),
-                                               received_hmac=message.hmac_signature):
-        log.debug(f"Message PASSED HMAC check {message}")
-        message_pool.append(message)
-        return {"status": 200, "data": "Message received"}
-    else:
-        log.debug(f"Message FAILED HMAC check {message}")
+    try:
+        if encryption.EncryptionHelper.verify_hmac(ciphertext=base64.b64decode(message.message),
+                                                   received_hmac=message.hmac_signature):
+            log.debug(f"Message PASSED HMAC check {message}")
+            message_pool.append(message)
+            return {"status": 200, "data": "Message received"}
+        else:
+            log.debug(f"Message FAILED HMAC check {message}")
+            return {"status": 500, "data": "Message seems to be tampered with"}
+    except Exception as e:
         return {"status": 500, "data": "Message seems to be tampered with"}
+
 
 @app.get("/get_messages")
 async def get_messages():
     return {"status": 200, "data": message_pool}
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

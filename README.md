@@ -16,6 +16,9 @@ Install the requirements
 ``pip install -r requirements.txt``
 
 Running the application
+1. Run Server first:
+``python server.py``
+2. Run the app:
 ``python app.py``
 
 Side Note:
