@@ -9,11 +9,21 @@ log = logg.setup_logger(name="TEST", level=logging.DEBUG)
 
 
 def test_send_message():
+    log.critical("TESTING SENDING MESSAGE PROCESS")
     response = handler.ChatHandler.process_message(user="Test", message="Hello")
-    log.critical(f"RESPONSE OF TEST {response}")
+
+    log.critical("TESTING SENDING MESSAGE user = test, message = hello")
+    log.critical(f"RESPONSE OF TEST {response} MESSAGE")
+    log.critical("TESTING SENDING CORRECT MESSAGE")
+    correct_response = requests.post("http://127.0.0.1:8000/send_message", json=response).json()
+    log.critical(f"RESPONSE UNTAMPERED MESSAGE: {correct_response}")
+
+    log.critical("TAMPERING MESSAGE")
     enc_message = {"user": "Test", "message": "THIS IS TAMPERED", "hmac_signature": f"{response.get('hmac_signature')}"}
-    response = requests.post("http://127.0.0.1:8000/send_message", json=enc_message).json()
-    print(response)
+    log.critical(f"TAMPERED MESSAGE {enc_message}")
+    log.critical("TESTING SENDING TAMPERED MESSAGE")
+    wrong_response = requests.post("http://127.0.0.1:8000/send_message", json=enc_message).json()
+    log.critical(f"RESPONSE TAMPERED MESSAGE: {wrong_response}")
 
 
 def test_decrypt_message():
@@ -28,4 +38,4 @@ def test_decrypt_message():
 
 
 if __name__ == "__main__":
-    test_decrypt_message()
+    test_send_message()
