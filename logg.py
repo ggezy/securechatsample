@@ -1,16 +1,13 @@
 import logging
-import os
-from logging.handlers import RotatingFileHandler
 
 
-def setup_logger(name,  level=logging.INFO, max_bytes=10485760, backup_count=5):
+
+def setup_logger(name,  level=logging.INFO):
     """
     Function to setup a logger with the specified name and log file.
     :param name: Name of the logger.
     :param log_file: File where the log will be saved.
     :param level: Logging level.
-    :param max_bytes: Maximum file size in bytes before it is rotated.
-    :param backup_count: Number of backup files to keep.
     :return: Configured logger.
     """
 
