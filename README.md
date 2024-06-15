@@ -16,10 +16,13 @@ Install the requirements
 ``pip install -r requirements.txt``
 
 Running the application
-1. Run Server first:
+Open 2 command line prompt or ZSH
+1. Run Server first on the first tab:
 ``python server.py``
-2. Run the app:
+2. Run the app on the second tab:
 ``python app.py``
+
+Make sure the server is fully up before running the app.
 
 Side Note:
 If you want to change the where the host and port or any configuration want to be added,

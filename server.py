@@ -8,7 +8,7 @@ import encryption
 import base64
 import logg
 import datetime as dt
-from scheduler import Scheduler
+import config
 
 log = logg.setup_logger(name="Secure-Server-Leviathan", level=logging.DEBUG)
 app = FastAPI()
@@ -21,8 +21,10 @@ app.add_middleware(
 )
 
 """{'user': user,
-                     'message': base64.b64encode(encrypted_message).decode(),
-                     'hmac_signature': hmac_signature}"""
+    'message': base64.b64encode(encrypted_message).decode(),
+    'hmac_signature': hmac_signature}"""
+
+
 class Message(BaseModel):
     user: str
     message: str
@@ -51,4 +53,4 @@ async def get_messages():
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host=config.SERVER_ADDR, port=config.SERVER_PORT)

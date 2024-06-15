@@ -71,7 +71,7 @@ def send_message():
     user = request.form.get('user')
     message = request.form.get('message')
     enc_message = handler.ChatHandler.process_message(user=user, message=message)
-    response = requests.post("http://127.0.0.1:8000/send_message", json=enc_message)
+    response = requests.post(f"http://{config.SERVER_ADDR}:{config.SERVER_PORT}/send_message", json=enc_message)
     if response['status'] == 200:
         return render_template('chat.html')
     else:
@@ -85,7 +85,7 @@ def receive_messages():
     :return:
     """
     decrypted_messages = []
-    response = requests.get("http://127.0.0.1:8000/get_messages").json()
+    response = requests.get(f"http://{config.SERVER_ADDR}:{config.SERVER_PORT}/get_messages").json()
     handler.ChatHandler.receive_message(response['data'])
     if len(response.get('data')) == 0:
         return jsonify(decrypted_messages)
@@ -100,4 +100,4 @@ def receive_messages():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host=config.APP_ADDR, port=config.APP_PORT)
