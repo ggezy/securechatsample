@@ -68,7 +68,8 @@ def send_message():
     NOTE: Need a separate handler for testing
     :return:
     """
-    user = request.form.get('user')
+    # user = request.form.get('user')
+    user = current_user.username
     message = request.form.get('message')
     enc_message = handler.ChatHandler.process_message(user=user, message=message)
     response = requests.post(f"http://{config.SERVER_ADDR}:{config.SERVER_PORT}/send_message", json=enc_message)
